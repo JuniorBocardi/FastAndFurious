@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package local.antonio.F.F.controller;
 
 import jakarta.persistence.EntityManager;
@@ -21,10 +17,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- *
- * @author Junior
- */
 @RestController
 public class ProdutoController {
 
@@ -39,11 +31,14 @@ public class ProdutoController {
         return produtoRepository.findAll();
     }
 
+    @GetMapping("/produtos/nome/{nome}")
+    public List<Produto> buscarPorNome(@PathVariable String nome) {
+        return produtoRepository.findByNomeContainingIgnoreCase(nome);
+    }
+
     @GetMapping("/produtos/{produtoID}")
     public ResponseEntity<Produto> buscar(@PathVariable Long produtoID) {
-
         Optional<Produto> produto = produtoRepository.findById(produtoID);
-
         if (produto.isPresent()) {
             return ResponseEntity.ok(produto.get());
         } else {
@@ -54,21 +49,29 @@ public class ProdutoController {
     @PostMapping("/produtos")
     @ResponseStatus(HttpStatus.CREATED)
     public Produto adicionar(@RequestBody Produto produto) {
-
         return produtoRepository.save(produto);
     }
-    
-    @PutMapping("/produtos/{produtoID}")
-    public ResponseEntity<Produto> atualizar(@PathVariable Long produtoID,
-            @RequestBody Produto produto) {
 
-        //Verifica se produto existe 
-        if (!produtoRepository.existsById(produtoID)) {
+    @PutMapping("/produtos/{id}")
+    public ResponseEntity<Produto> atualizarParcialmente(@PathVariable Long id, @RequestBody Produto dados) {
+        Optional<Produto> optionalProduto = produtoRepository.findById(id);
+        if (optionalProduto.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
-        produto.setId(produtoID);
-        produto = produtoRepository.save(produto);
+        Produto produto = optionalProduto.get();
+
+        if (dados.getNome() != null) {
+            produto.setNome(dados.getNome());
+        }
+        if (dados.getPreco() != null) {
+            produto.setPreco(dados.getPreco());
+        }
+        if (dados.getCategoria() != null) {
+            produto.setCategoria(dados.getCategoria());
+        }
+
+        produtoRepository.save(produto);
         return ResponseEntity.ok(produto);
     }
 }
