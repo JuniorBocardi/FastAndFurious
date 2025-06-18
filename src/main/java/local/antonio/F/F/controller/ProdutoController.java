@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+
+
 @RestController
 public class ProdutoController {
 
@@ -56,13 +58,13 @@ public class ProdutoController {
 
     @PostMapping("/produtos")
     @ResponseStatus(HttpStatus.CREATED)
-    public Produto adicionar(@RequestBody Produto produto) {
+    public Produto adicionar(@Valid @RequestBody Produto produto) {
 
         return produtoRepository.save(produto);
     }
 
     @PutMapping("/produtos/{id}")
-    public ResponseEntity<Produto> atualizarParcialmente(@PathVariable Long id, @RequestBody Produto dados) {
+    public ResponseEntity<Produto> atualizarParcialmente(@Valid @PathVariable Long id, @RequestBody Produto dados) {
         Optional<Produto> optionalProduto = produtoRepository.findById(id);
         if (optionalProduto.isEmpty()) {
             return ResponseEntity.notFound().build();
