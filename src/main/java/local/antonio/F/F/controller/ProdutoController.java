@@ -30,7 +30,7 @@ public class ProdutoController {
     private ProdutoRepository produtoRepository;
 
     @GetMapping("/produtos")
-    public List<Produto> listas() {
+    public List<Produto> listar() {
         return produtoRepository.findAll();
     }
 
@@ -39,7 +39,7 @@ public class ProdutoController {
         return produtoRepository.findByNomeContainingIgnoreCase(nome);
     }
     
-    @GetMapping("/produtos/categoria/{categoria}")
+    @GetMapping("/produtos/cat/{categoria}")
     public List<Produto> buscarPorCategoria(@PathVariable String categoria) {
         return produtoRepository.findByCategoriaContainingIgnoreCase(categoria);
     }
