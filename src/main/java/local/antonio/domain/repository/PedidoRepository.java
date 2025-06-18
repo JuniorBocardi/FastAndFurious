@@ -4,7 +4,9 @@
  */
 package local.antonio.domain.repository;
 
+import java.util.List;
 import local.antonio.domain.model.Pedido;
+import local.antonio.domain.model.StatusPedido;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
@@ -13,4 +15,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
  */
 public interface PedidoRepository extends JpaRepository<Pedido, Long>{
 
+    
+    List<Pedido> findByStatus(StatusPedido status);
 }

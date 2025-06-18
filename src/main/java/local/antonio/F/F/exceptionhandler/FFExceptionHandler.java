@@ -15,6 +15,7 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 /**
@@ -22,7 +23,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
  * @author Junior
  */
 @ControllerAdvice
-public class ExceptionHandler extends ResponseEntityExceptionHandler {
+public class FFExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
@@ -47,7 +48,18 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
 
         problema.setCampos(camposComErro);
         
+
         return new ResponseEntity<>(problema, headers, status);
     }
+    
 
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<Object> handleEnumInvalido(MethodArgumentTypeMismatchException ex, WebRequest request) {
+        ProblemaException problema = new ProblemaException();
+        problema.setStatus(400);
+        problema.setTitulo("Valor inválido para um dos campos. Verifique os campos e tente novamente.");
+        problema.setDatahora(LocalDateTime.now());
+
+        return handleExceptionInternal(ex, problema, new HttpHeaders(), org.springframework.http.HttpStatus.BAD_REQUEST, request);
+    }
 }
