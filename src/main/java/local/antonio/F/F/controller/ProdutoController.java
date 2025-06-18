@@ -35,10 +35,17 @@ public class ProdutoController {
     public List<Produto> buscarPorNome(@PathVariable String nome) {
         return produtoRepository.findByNomeContainingIgnoreCase(nome);
     }
+    
+    @GetMapping("/produtos/categoria/{categoria}")
+    public List<Produto> buscarPorCategoria(@PathVariable String categoria) {
+        return produtoRepository.findByCategoriaContainingIgnoreCase(categoria);
+    }
 
     @GetMapping("/produtos/{produtoID}")
     public ResponseEntity<Produto> buscar(@PathVariable Long produtoID) {
+
         Optional<Produto> produto = produtoRepository.findById(produtoID);
+
         if (produto.isPresent()) {
             return ResponseEntity.ok(produto.get());
         } else {
@@ -49,6 +56,7 @@ public class ProdutoController {
     @PostMapping("/produtos")
     @ResponseStatus(HttpStatus.CREATED)
     public Produto adicionar(@RequestBody Produto produto) {
+
         return produtoRepository.save(produto);
     }
 
