@@ -4,10 +4,19 @@
  */
 package local.antonio.domain.repository;
 
+import java.util.List;
+import local.antonio.domain.model.Produto;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
 /**
  *
  * @author Junior
  */
-public interface ProdutoRepository {
+@Repository
+public interface ProdutoRepository extends JpaRepository<Produto, Long> {
     
+    List<Produto> findByNome(String nome);
+    List<Produto> findByNomeContaining(String nome);
+
 }
